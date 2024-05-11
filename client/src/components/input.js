@@ -56,7 +56,7 @@ const Input = ({}) => {
         multiple
         onChange={(event) => uploadFileInput(event)}
       />
-      {images.map((image) => (
+      {images?.map((image) => (
         <img key={image.id} src={image.src} alt='Dinosaur' />
       ))}
     </div>
