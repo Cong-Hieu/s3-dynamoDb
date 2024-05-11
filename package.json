@@ -5,13 +5,21 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon --quiet server",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "start-recipe-ms": "node ./recipe-ms/main.js",
+    "start-processor-ms": "node ./processor-ms/main.js",
+    "start-main-ms": "node ./main-ms/main.js",
+    "start": "concurrently  \"npm run start-recipe-ms\" \"npm run start-processor-ms\" \"npm run start-main-ms\"  \"npm run client\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.8.1",
+    "@grpc/proto-loader": "^0.7.4",
+    "express": "^4.18.2",
+    "grpc": "^1.24.11"
+  },
   "devDependencies": {
     "concurrently": "^8.2.2",
     "nodemon": "^3.1.0"

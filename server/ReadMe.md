@@ -1,1 +1,0 @@
-# Harry Potter API with Dynamo DB, Nodejs, and Expressjs
