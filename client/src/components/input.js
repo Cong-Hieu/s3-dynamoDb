@@ -5,7 +5,7 @@ const Input = ({}) => {
   const [images, setImages] = useState([])
   const getImage = async () => {
     try {
-      const response = await fetch('http://localhost:8080/images')
+      const response = await fetch('http://localhost:5000/orders')
       const data = await response.json()
       setImages(data)
       return data
