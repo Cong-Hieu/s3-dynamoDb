@@ -2,6 +2,7 @@ const path = require('path')
 const grpc = require('@grpc/grpc-js')
 const protoLoader = require('@grpc/proto-loader')
 const express = require('express')
+const cors = require('cors')
 
 const packageDefinitionReci = protoLoader.loadSync(
   path.join(__dirname, '../protos/recipes.proto')
@@ -11,7 +12,12 @@ const packageDefinitionProc = protoLoader.loadSync(
 )
 const recipesProto = grpc.loadPackageDefinition(packageDefinitionReci)
 const processingProto = grpc.loadPackageDefinition(packageDefinitionProc)
-
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', '*')
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+//   next()
+// })
 const recipesStub = new recipesProto.Recipes(
   '0.0.0.0:50051',
   grpc.credentials.createInsecure()
@@ -23,7 +29,7 @@ const processingStub = new processingProto.Processing(
 
 const app = express()
 app.use(express.json())
-
+app.use(cors())
 const restPort = 5000
 let orders = {}
 
