@@ -2,6 +2,12 @@ syntax = "proto3";
 
 service Recipes {
   rpc Find (ProductId) returns (Recipe) {}
+  rpc GetIllustrate (ProductId) returns (Illustrate) {}
+}
+
+message Illustrate {
+  string id = 1;
+  string name = 2;
 }
 
 message ProductId {

@@ -26,7 +26,32 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 const restPort = 5000
-const orders = {}
+const orders = {
+  1: {
+    id: 1,
+    status: 3,
+    productId: 1000,
+    createdAt: '16:41:34, 12/5/2024',
+    recipe: {
+      id: 100,
+      title: 'Pizza',
+      notes: 'See video: pizza_recipe.mp4. Use oven No. 12',
+      illustrate: ''
+    }
+  },
+  2: {
+    id: 2,
+    status: 2,
+    productId: 2000,
+    createdAt: '16:41:37, 12/5/2024',
+    recipe: {
+      id: 200,
+      title: 'Lasagna',
+      notes: 'Ask from John. Use any oven, but make sure to pre-heat it!',
+      illustrate: ''
+    }
+  }
+}
 
 function processAsync(order) {
   recipesStub.find({ id: order.productId }, (err, recipe) => {
@@ -45,7 +70,7 @@ function processAsync(order) {
 
 app.post('/orders', (req, res) => {
   if (!req.body.productId) {
-    res.status(400).send('Product identifier is not sets')
+    res.status(400).send('Product identifier is not set')
     return
   }
   const orderId = Object.keys(orders).length + 1
@@ -59,9 +84,26 @@ app.post('/orders', (req, res) => {
   processAsync(order)
   res.send(order)
 })
+app.get('/', (req, res) => {
+  res.send('Hello from main-ms')
+})
+app.get('/orders', async (req, res) => {
+  const getIllustrateOrders = new Promise((resolve, reject) => {
+    let count = 0
+    Object.keys(orders).forEach(function (key) {
+      const order = orders[key]
+      recipesStub.getIllustrate({ id: order.productId }, (err, illustrate) => {
+        orders[key].recipe.illustrate = illustrate?.name
+        count++
+        if (count === Object.keys(orders).length) resolve()
+      })
+    })
+  })
 
-app.get('/orders', (req, res) => {
-  res.status(200).send({ data: orders })
+  getIllustrateOrders?.then(() => {
+    console.log('All done!')
+    res.status(200).send(orders)
+  })
 })
 
 app.get('/orders/:id', (req, res) => {
