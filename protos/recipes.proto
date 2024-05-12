@@ -12,4 +12,5 @@ message Recipe {
   uint32 id = 1;
   string title = 2;
   string notes = 3;
+  string illustrate = 4;
 }

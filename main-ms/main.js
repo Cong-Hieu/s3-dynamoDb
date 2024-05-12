@@ -12,12 +12,7 @@ const packageDefinitionProc = protoLoader.loadSync(
 )
 const recipesProto = grpc.loadPackageDefinition(packageDefinitionReci)
 const processingProto = grpc.loadPackageDefinition(packageDefinitionProc)
-// app.use((req, res, next) => {
-//   res.setHeader('Access-Control-Allow-Origin', '*')
-//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
-//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-//   next()
-// })
+
 const recipesStub = new recipesProto.Recipes(
   '0.0.0.0:50051',
   grpc.credentials.createInsecure()
@@ -31,7 +26,7 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 const restPort = 5000
-let orders = {}
+const orders = {}
 
 function processAsync(order) {
   recipesStub.find({ id: order.productId }, (err, recipe) => {
@@ -53,8 +48,8 @@ app.post('/orders', (req, res) => {
     res.status(400).send('Product identifier is not set')
     return
   }
-  let orderId = Object.keys(orders).length + 1
-  let order = {
+  const orderId = Object.keys(orders).length + 1
+  const order = {
     id: orderId,
     status: 0,
     productId: req.body.productId,
