@@ -45,7 +45,7 @@ function processAsync(order) {
 
 app.post('/orders', (req, res) => {
   if (!req.body.productId) {
-    res.status(400).send('Product identifier is not set')
+    res.status(400).send('Product identifier is not sets')
     return
   }
   const orderId = Object.keys(orders).length + 1
