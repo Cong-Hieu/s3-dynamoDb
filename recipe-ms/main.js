@@ -9,12 +9,12 @@ const recipesProto = grpc.loadPackageDefinition(packageDefinition)
 const AWS = require('aws-sdk')
 
 AWS.config.update({
-  region: process.env.REGION,
-  accessKeyId: process.env.ACCESS_KEY_ID,
-  secretAccessKey: process.env.SECRET_ACCESS_KEY
+  region: 'us-east-1',
+  accessKeyId: 'AKIAWORLX2ZOW7JTXDWG',
+  secretAccessKey: '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'
 })
 const s3 = new AWS.S3({
-  Bucket: process.env.S3_BUCKET
+  Bucket: 's3-demo222'
 })
 const dynamoClient = new AWS.DynamoDB.DocumentClient()
 const TABLE_NAME = 'demo'
