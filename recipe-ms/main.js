@@ -6,16 +6,28 @@ const packageDefinition = protoLoader.loadSync(
 )
 const recipesProto = grpc.loadPackageDefinition(packageDefinition)
 const AWS = require('aws-sdk')
-require('dotenv').config({ path: __dirname + '/.env' })
 
 AWS.config.update({
-  region: process.env.AWS_DEFAULT_REGION,
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+  region: 'us-east-1',
+  accessKeyId: 'AKIAWORLX2ZOW7JTXDWG',
+  secretAccessKey: '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'
 })
-
+const s3 = new AWS.S3({
+  Bucket: 's3-demo222'
+})
 const dynamoClient = new AWS.DynamoDB.DocumentClient()
 const TABLE_NAME = 'demo'
+
+const getCharacters = async (id) => {
+  const params = {
+    TableName: TABLE_NAME,
+    Key: {
+      id: id.toString()
+    }
+  }
+  const data = await dynamoClient.get(params).promise()
+  return data
+}
 
 const RECIPES = [
   {
@@ -46,8 +58,27 @@ function findRecipe(call, callback) {
   }
 }
 
+const getIllustrate = (call, callback) => {
+  const { id } = call.request
+  getCharacters(id)
+    .then((characters) => {
+      const illustrate = characters.Item
+      illustrate.name = `https://s3-demo222.s3.amazonaws.com/${illustrate.name}`
+      callback(null, illustrate)
+    })
+    .catch((error) => {
+      callback({
+        message: 'Illustrate not found',
+        code: grpc.status.INVALID_ARGUMENT
+      })
+    })
+}
+
 const server = new grpc.Server()
-server.addService(recipesProto.Recipes.service, { find: findRecipe })
+server.addService(recipesProto.Recipes.service, {
+  find: findRecipe,
+  getIllustrate: getIllustrate
+})
 server.bindAsync(
   '0.0.0.0:50051',
   grpc.ServerCredentials.createInsecure(),
