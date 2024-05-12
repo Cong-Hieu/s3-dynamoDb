@@ -84,7 +84,9 @@ app.post('/orders', (req, res) => {
   processAsync(order)
   res.send(order)
 })
-
+app.get('/', (req, res) => {
+  res.send('Hello from main-ms')
+})
 app.get('/orders', async (req, res) => {
   const getIllustrateOrders = new Promise((resolve, reject) => {
     let count = 0

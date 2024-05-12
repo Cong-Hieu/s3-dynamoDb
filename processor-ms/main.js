@@ -1,6 +1,7 @@
 const path = require('path')
 const grpc = require('@grpc/grpc-js')
 const protoLoader = require('@grpc/proto-loader')
+require('dotenv').config({ path: __dirname + '/.env' })
 const packageDefinition = protoLoader.loadSync(
   path.join(__dirname, '../protos/processing.proto')
 )
